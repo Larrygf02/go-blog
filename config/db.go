@@ -5,6 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/larrygf02/go-blog/views"
 )
 
 var db *gorm.DB
@@ -18,5 +19,5 @@ func InitialMigration() {
 	}
 	fmt.Println("You are connect")
 	defer db.Close()
-	db.AutoMigrate()
+	db.AutoMigrate(&views.User{})
 }

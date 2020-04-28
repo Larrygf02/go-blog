@@ -1,10 +1,10 @@
 package views
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 )
 
@@ -22,13 +22,13 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		panic("Could not connect to the database")
 	}
 	defer db.Close()
-	vars := mux.Vars(r)
-	nickname := vars["nickname"]
-	name := vars["name"]
-	email := vars["email"]
-	password := vars["password"]
-
-	db.Create(&User{Name: name, Email: email, Nickname: nickname, Password: password})
+	var user User
+	err = json.NewDecoder(r.Body).Decode(&user)
+	//reqBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Fprintf(w, "Inserte un Usuario valido")
+	}
+	db.Create(&user)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(w, "New user successfully created")
