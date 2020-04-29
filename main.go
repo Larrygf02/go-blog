@@ -18,6 +18,7 @@ func handleRequests() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", home).Methods("GET")
 	router.HandleFunc("/user", views.NewUser).Methods("POST")
+	router.HandleFunc("/login", views.Login).Methods("POST")
 	// Habilitar CORS
 	router.Use(mux.CORSMethodMiddleware(router))
 	log.Fatal(http.ListenAndServe(":5000", router))
