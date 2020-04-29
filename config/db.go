@@ -19,5 +19,10 @@ func InitialMigration() {
 	}
 	fmt.Println("You are connect")
 	defer db.Close()
-	db.AutoMigrate(&views.User{})
+	err = db.AutoMigrate(&views.User{}).Error
+	if err != nil {
+		fmt.Println(err.Error())
+		panic("Failed migrate")
+	}
+
 }
