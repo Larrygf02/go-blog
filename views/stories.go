@@ -50,7 +50,8 @@ func StorieByUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Operacion no valida")
 	}
 	db.Model(&user).Related(&stories)
-	fmt.Println(stories)
+	//fmt.Println(stories)
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, "Data get obtein successfully")
+	//fmt.Fprintf(w, "Data get obtein successfully")
+	json.NewEncoder(w).Encode(stories)
 }
