@@ -19,7 +19,8 @@ func InitialMigration() {
 	}
 	fmt.Println("You are connect")
 	defer db.Close()
-	err = db.AutoMigrate(&views.User{}).Error
+	err = db.AutoMigrate(&views.User{}, &views.Storie{}).Error
+	// db.Model(&Storie{}).AddForeignKey("", "stories(id)", "RESTRICT", "RESTRICT")
 	if err != nil {
 		fmt.Println(err.Error())
 		panic("Failed migrate")
