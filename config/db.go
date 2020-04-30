@@ -19,7 +19,7 @@ func InitialMigration() {
 	}
 	fmt.Println("You are connect")
 	defer db.Close()
-	err = db.AutoMigrate(&views.User{}, &views.Storie{}).Error
+	err = db.AutoMigrate(&views.User{}, &views.Storie{}, &views.StorieVisit{}).Error
 	// db.Model(&Storie{}).AddForeignKey("", "stories(id)", "RESTRICT", "RESTRICT")
 	if err != nil {
 		fmt.Println(err.Error())

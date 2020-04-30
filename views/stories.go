@@ -16,6 +16,14 @@ type Storie struct {
 	UserId  uint
 }
 
+type StorieVisit struct {
+	gorm.Model
+	User     User `gorm:"foreignkey:UserId;not null"`
+	UserId   uint
+	Storie   Storie `gorm:"foreignkey:StorieId;not null"`
+	StorieId uint
+}
+
 func NewStorie(w http.ResponseWriter, r *http.Request) {
 
 	db, err := gorm.Open("postgres", "host=localhost sslmode=disable port=5433 user=postgres dbname=bloggo password=123")
