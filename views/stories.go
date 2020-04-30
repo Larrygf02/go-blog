@@ -40,7 +40,6 @@ func NewStorie(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Fprintf(w, "No se inserto")
 	}
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(w, "New storie created")
 }
@@ -58,9 +57,6 @@ func StorieByUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Operacion no valida")
 	}
 	db.Model(&user).Related(&stories)
-	//fmt.Println(stories)
-	w.Header().Set("Content-Type", "application/json")
-	//fmt.Fprintf(w, "Data get obtein successfully")
 	json.NewEncoder(w).Encode(stories)
 }
 
@@ -79,7 +75,6 @@ func NewStorieVisit(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Fprintf(w, "No se agrego la visita")
 	}
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(w, "New storie created")
 }
@@ -92,6 +87,5 @@ func GetAllStorieVisit(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	var stories_visit []Storie
 	db.Find(&stories_visit)
-	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(stories_visit)
 }

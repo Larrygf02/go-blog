@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/larrygf02/go-blog/config"
+	"github.com/larrygf02/go-blog/middlewares"
 	"github.com/larrygf02/go-blog/views"
 )
 
@@ -25,6 +26,7 @@ func handleRequests() {
 	router.HandleFunc("/storievisit", views.GetAllStorieVisit).Methods("GET")
 	// Habilitar CORS
 	router.Use(mux.CORSMethodMiddleware(router))
+	router.Use(middlewares.SetMiddlewareJSON)
 	log.Fatal(http.ListenAndServe(":5000", router))
 }
 
