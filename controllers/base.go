@@ -25,4 +25,5 @@ func (s *Server) Initialize(DBDriver, DBUser, DBPassword, DBPort, DBHost, DBName
 	}
 	s.DB.Debug().AutoMigrate(&views.User{}, &views.Storie{}, &views.StorieVisit{})
 	s.Router = mux.NewRouter()
+	s.InitializeRoutes()
 }
