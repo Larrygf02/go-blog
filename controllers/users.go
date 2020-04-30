@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/larrygf02/go-blog/models"
 )
 
 func (s *Server) NewUser(w http.ResponseWriter, r *http.Request) {
@@ -12,12 +14,12 @@ func (s *Server) NewUser(w http.ResponseWriter, r *http.Request) {
 		panic("Could not connect to the database")
 	}
 	defer db.Close() */
-	var user User
+	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		fmt.Fprintf(w, "Inserte un Usuario valido")
 	}
-	err = user.SaveUser(s.DB)
+	userCreated, err := user.SaveUser(s.DB)
 	if err != nil {
 		panic("Not inserted")
 	}
