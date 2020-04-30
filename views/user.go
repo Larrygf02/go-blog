@@ -33,26 +33,13 @@ type User struct {
 	defer db.Close()
 } */
 
-func NewUser(w http.ResponseWriter, r *http.Request) {
-	db, err := gorm.Open("postgres", "host=localhost sslmode=disable port=5433 user=postgres dbname=bloggo password=123")
+func (u *User) SaveUser(db *gorm.DB) (*User, error) {
+	var err error
+	err = db.Create(&u).Error
 	if err != nil {
-		panic("Could not connect to the database")
+		return &User{}, err
 	}
-	defer db.Close()
-	var user User
-	err = json.NewDecoder(r.Body).Decode(&user)
-	// user.init()
-	//reqBody, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		fmt.Fprintf(w, "Inserte un Usuario valido")
-	}
-	err = db.Create(&user).Error
-	if err != nil {
-		panic("Not inserted")
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintf(w, "New user successfully created")
+	return u, nil
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {

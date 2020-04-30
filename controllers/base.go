@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -26,4 +27,8 @@ func (s *Server) Initialize(DBDriver, DBUser, DBPassword, DBPort, DBHost, DBName
 	s.DB.Debug().AutoMigrate(&views.User{}, &views.Storie{}, &views.StorieVisit{})
 	s.Router = mux.NewRouter()
 	s.InitializeRoutes()
+}
+
+func (s *Server) Run(port string) {
+	log.Fatal(http.ListenAndServe(port, s.Router))
 }
