@@ -21,6 +21,8 @@ func handleRequests() {
 	router.HandleFunc("/login", views.Login).Methods("POST")
 	router.HandleFunc("/storie", views.NewStorie).Methods("POST")
 	router.HandleFunc("/storiebyuser", views.StorieByUser).Methods("POST")
+	router.HandleFunc("/storievisit", views.NewStorieVisit).Methods("POST")
+	router.HandleFunc("/storievisit", views.GetAllStorieVisit).Methods("GET")
 	// Habilitar CORS
 	router.Use(mux.CORSMethodMiddleware(router))
 	log.Fatal(http.ListenAndServe(":5000", router))

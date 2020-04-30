@@ -83,3 +83,15 @@ func NewStorieVisit(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(w, "New storie created")
 }
+
+func GetAllStorieVisit(w http.ResponseWriter, r *http.Request) {
+	db, err := gorm.Open("postgres", "host=localhost sslmode=disable port=5433 user=postgres dbname=bloggo password=123")
+	if err != nil {
+		panic("Could not connect to the database")
+	}
+	defer db.Close()
+	var stories_visit []Storie
+	db.Find(&stories_visit)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(stories_visit)
+}
