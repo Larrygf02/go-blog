@@ -63,3 +63,23 @@ func StorieByUser(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprintf(w, "Data get obtein successfully")
 	json.NewEncoder(w).Encode(stories)
 }
+
+func NewStorieVisit(w http.ResponseWriter, r *http.Request) {
+	db, err := gorm.Open("postgres", "host=localhost sslmode=disable port=5433 user=postgres dbname=bloggo password=123")
+	if err != nil {
+		panic("Could not connect to the database")
+	}
+	defer db.Close()
+	var storie_visit StorieVisit
+	err = json.NewDecoder(r.Body).Decode(&storie_visit)
+	if err != nil {
+		fmt.Fprintf(w, "Error en la data de la visita")
+	}
+	err = db.Create(&storie_visit).Error
+	if err != nil {
+		fmt.Fprintf(w, "No se agrego la visita")
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	fmt.Fprintf(w, "New storie created")
+}
