@@ -31,3 +31,32 @@ func (s *Server) StorieByUser(w http.ResponseWriter, r *http.Request) {
 	}
 	send_response.JSON(w, http.StatusOK, stories)
 }
+
+/* STORIEVISIT*/
+func (s *Server) NewStorieVisist(w http.ResponseWriter, r *http.Request) {
+	var storie_visit models.StorieVisit
+	err := json.NewDecoder(r.Body).Decode(&storie_visit)
+	if err != nil {
+		fmt.Fprintf(w, "Error en la data")
+	}
+	storieVisitCreated, err := storie_visit.SaveStorieVisit(s.DB)
+	if err != nil {
+		send_response.ERROR(w, http.StatusInternalServerError, err)
+	}
+
+	send_response.JSON(w, http.StatusOK, storieVisitCreated)
+}
+
+func (s *Server) GetAllStorieVisit(w http.ResponseWriter, r *http.Request) {
+	var storie_visit models.StorieVisit
+	stories_visit, count := storie_visit.GetAll(s.DB)
+	type resp struct {
+		Count int                  `json:"count"`
+		Data  []models.StorieVisit `json:"data"`
+	}
+	response := resp{
+		Count: count,
+		Data:  *stories_visit,
+	}
+	send_response.JSON(w, http.StatusOK, response)
+}

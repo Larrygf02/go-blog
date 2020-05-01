@@ -10,6 +10,15 @@ type Storie struct {
 	UserId  uint
 }
 
+type StorieVisit struct {
+	gorm.Model
+	User     User `gorm:"foreignkey:UserId;not null"`
+	UserId   uint
+	Storie   Storie `gorm:"foreignkey:StorieId;not null"`
+	StorieId uint
+}
+
+/* Storie */
 func (s *Storie) SaveStorie(db *gorm.DB) (*Storie, error) {
 	var err error
 	err = db.Create(&s).Error
@@ -17,4 +26,21 @@ func (s *Storie) SaveStorie(db *gorm.DB) (*Storie, error) {
 		return &Storie{}, err
 	}
 	return s, nil
+}
+
+/* Storie Visit*/
+func (sv *StorieVisit) SaveStorieVisit(db *gorm.DB) (*StorieVisit, error) {
+	var err error
+	err = db.Create(&sv).Error
+	if err != nil {
+		return &StorieVisit{}, err
+	}
+	return sv, nil
+}
+
+func (sv *StorieVisit) GetAll(db *gorm.DB) (*[]StorieVisit, int) {
+	count := 0
+	var stories_visit []StorieVisit
+	db.Find(&stories_visit).Count(&count)
+	return &stories_visit, count
 }
