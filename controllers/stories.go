@@ -33,7 +33,7 @@ func (s *Server) StorieByUser(w http.ResponseWriter, r *http.Request) {
 }
 
 /* STORIEVISIT*/
-func (s *Server) NewStorieVisist(w http.ResponseWriter, r *http.Request) {
+func (s *Server) NewStorieVisit(w http.ResponseWriter, r *http.Request) {
 	var storie_visit models.StorieVisit
 	err := json.NewDecoder(r.Body).Decode(&storie_visit)
 	if err != nil {
