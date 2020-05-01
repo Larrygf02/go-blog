@@ -6,8 +6,14 @@ import (
 	"net/http"
 
 	"github.com/larrygf02/go-blog/models"
-	"github.com/larrygf02/go-blog/response"
+	send_response "github.com/larrygf02/go-blog/response"
 )
+
+// Las propiedas de las structuras deben estar en mayusculas
+// debe tener las dobles comillas en el json
+type resp struct {
+	IsLogin bool `json:"is_login"`
+}
 
 func (s *Server) NewUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
@@ -17,9 +23,9 @@ func (s *Server) NewUser(w http.ResponseWriter, r *http.Request) {
 	}
 	userCreated, err := user.SaveUser(s.DB)
 	if err != nil {
-		response.ERROR(w, http.StatusInternalServerError, err)
+		send_response.ERROR(w, http.StatusInternalServerError, err)
 	}
-	response.JSON(w, http.StatusCreated, userCreated)
+	send_response.JSON(w, http.StatusCreated, userCreated)
 }
 
 func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +34,12 @@ func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Fprintf(w, "Hubo un problema")
 	}
-	userFind, isLogin := user.Login(s.DB)
+
+	_, isLogin := user.Login(s.DB)
 	fmt.Println(isLogin)
-	response.JSON(w, http.StatusOK, userFind)
+	response := resp{
+		IsLogin: isLogin,
+	}
+	json.NewEncoder(w).Encode(response)
+	//send_response.JSON(w, http.StatusOK, response)
 }
