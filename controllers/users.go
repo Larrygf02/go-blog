@@ -12,7 +12,8 @@ import (
 // Las propiedas de las structuras deben estar en mayusculas
 // debe tener las dobles comillas en el json
 type resp struct {
-	IsLogin bool `json:"is_login"`
+	IsLogin bool        `json:"is_login"`
+	User    models.User `json:"user"`
 }
 
 func (s *Server) NewUser(w http.ResponseWriter, r *http.Request) {
@@ -35,10 +36,11 @@ func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hubo un problema")
 	}
 
-	_, isLogin := user.Login(s.DB)
+	userFind, isLogin := user.Login(s.DB)
 	fmt.Println(isLogin)
 	response := resp{
 		IsLogin: isLogin,
+		User:    *userFind,
 	}
 	json.NewEncoder(w).Encode(response)
 	//send_response.JSON(w, http.StatusOK, response)
