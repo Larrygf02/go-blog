@@ -28,3 +28,13 @@ func (u *User) Login(db *gorm.DB) (*User, bool) {
 	}
 	return &User{}, false
 }
+
+func (u *User) GetStories(db *gorm.DB) (*[]Storie, error) {
+	var stories []Storie
+	var err error
+	err = db.Model(&u).Related(&stories).Error
+	if err != nil {
+		return &[]Storie{}, err
+	}
+	return &stories, nil
+}

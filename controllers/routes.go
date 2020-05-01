@@ -10,6 +10,7 @@ func (s *Server) InitializeRoutes() {
 	//s.Router.HandleFunc("/", home).Methods("GET")
 	s.Router.HandleFunc("/user", s.NewUser).Methods("POST")
 	s.Router.HandleFunc("/login", s.Login).Methods("POST")
+	s.Router.HandleFunc("/storie", s.NewStorie).Methods("POST")
 	/* s.Router.HandleFunc("/login", views.Login).Methods("POST")
 	s.Router.HandleFunc("/storie", views.NewStorie).Methods("POST")
 	s.Router.HandleFunc("/storiebyuser", views.StorieByUser).Methods("POST")
