@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/larrygf02/go-blog/views"
+	"github.com/larrygf02/go-blog/models"
 )
 
 type Server struct {
@@ -25,7 +25,7 @@ func (s *Server) Initialize(DBDriver, DBUser, DBPassword, DBPort, DBHost, DBName
 	if err != nil {
 		log.Fatal("This is the error:", err)
 	}
-	s.DB.Debug().AutoMigrate(&views.User{}, &views.Storie{}, &views.StorieVisit{})
+	s.DB.Debug().AutoMigrate(&models.User{}, &models.Storie{}, &models.StorieVisit{}, &models.StorieApplause{})
 	s.Router = mux.NewRouter()
 	s.InitializeRoutes()
 }

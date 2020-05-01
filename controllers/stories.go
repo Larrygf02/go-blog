@@ -60,3 +60,17 @@ func (s *Server) GetAllStorieVisit(w http.ResponseWriter, r *http.Request) {
 	}
 	send_response.JSON(w, http.StatusOK, response)
 }
+
+/* StorieApplauses */
+func (s *Server) SaveStorieApplause(w http.ResponseWriter, r *http.Request) {
+	var storie_applaus models.StorieApplause
+	err := json.NewDecoder(r.Body).Decode(&storie_applaus)
+	if err != nil {
+		fmt.Fprintf(w, "Error en la data")
+	}
+	storieApplausCreated, err := storie_applaus.Save(s.DB)
+	if err != nil {
+		send_response.ERROR(w, http.StatusInternalServerError, err)
+	}
+	send_response.JSON(w, http.StatusCreated, storieApplausCreated)
+}
