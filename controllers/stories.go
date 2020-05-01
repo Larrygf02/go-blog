@@ -74,3 +74,17 @@ func (s *Server) SaveStorieApplause(w http.ResponseWriter, r *http.Request) {
 	}
 	send_response.JSON(w, http.StatusCreated, storieApplausCreated)
 }
+
+/* StorieComment */
+func (s *Server) SaveStorieComment(w http.ResponseWriter, r *http.Request) {
+	var storie_comment models.StorieComment
+	err := json.NewDecoder(r.Body).Decode(&storie_comment)
+	if err != nil {
+		fmt.Fprintf(w, "Error en la data")
+	}
+	storieCommentCreated, err := storie_comment.Save(s.DB)
+	if err != nil {
+		send_response.ERROR(w, http.StatusInternalServerError, err)
+	}
+	send_response.JSON(w, http.StatusCreated, storieCommentCreated)
+}

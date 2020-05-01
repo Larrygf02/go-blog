@@ -27,6 +27,15 @@ type StorieApplause struct {
 	Count    int
 }
 
+type StorieComment struct {
+	gorm.Model
+	User     User `gorm:"foreignkey:UserId;not null"`
+	UserId   uint
+	Storie   Storie `gorm:"foreignkey:StorieId; not null"`
+	StorieId uint
+	Content  string
+}
+
 /* Storie */
 func (s *Storie) SaveStorie(db *gorm.DB) (*Storie, error) {
 	var err error
@@ -62,4 +71,14 @@ func (sa *StorieApplause) Save(db *gorm.DB) (*StorieApplause, error) {
 		return &StorieApplause{}, err
 	}
 	return sa, nil
+}
+
+/* Storie Comment */
+func (sc *StorieComment) Save(db *gorm.DB) (*StorieComment, error) {
+	var err error
+	err = db.Create(&sc).Error
+	if err != nil {
+		return &StorieComment{}, err
+	}
+	return sc, nil
 }
