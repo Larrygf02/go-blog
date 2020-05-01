@@ -21,3 +21,14 @@ func (s *Server) NewUser(w http.ResponseWriter, r *http.Request) {
 	}
 	response.JSON(w, http.StatusCreated, userCreated)
 }
+
+func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		fmt.Fprintf(w, "Hubo un problema")
+	}
+	userFind, isLogin := user.Login(s.DB)
+	fmt.Println(isLogin)
+	response.JSON(w, http.StatusOK, userFind)
+}

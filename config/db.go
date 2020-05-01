@@ -25,5 +25,4 @@ func InitialMigration() {
 		fmt.Println(err.Error())
 		panic("Failed migrate")
 	}
-
 }

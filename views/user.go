@@ -33,15 +33,6 @@ type User struct {
 	defer db.Close()
 } */
 
-func (u *User) SaveUser(db *gorm.DB) (*User, error) {
-	var err error
-	err = db.Create(&u).Error
-	if err != nil {
-		return &User{}, err
-	}
-	return u, nil
-}
-
 func Login(w http.ResponseWriter, r *http.Request) {
 	db, err := gorm.Open("postgres", "host=localhost sslmode=disable port=5433 user=postgres dbname=bloggo password=123")
 	if err != nil {

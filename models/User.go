@@ -18,3 +18,13 @@ func (u *User) SaveUser(db *gorm.DB) (*User, error) {
 	}
 	return u, nil
 }
+
+func (u *User) Login(db *gorm.DB) (*User, bool) {
+	var userFind User
+	count := 0
+	db.Where(&u).First(&userFind).Count(&count)
+	if count != 0 {
+		return &userFind, true
+	}
+	return &User{}, false
+}
