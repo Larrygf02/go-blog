@@ -88,3 +88,26 @@ func (s *Server) SaveStorieComment(w http.ResponseWriter, r *http.Request) {
 	}
 	send_response.JSON(w, http.StatusCreated, storieCommentCreated)
 }
+
+func (s *Server) UpdateStorieComment(w http.ResponseWriter, r *http.Request) {
+	var storie_comment models.StorieComment
+	err := json.NewDecoder(r.Body).Decode(&storie_comment)
+	if err != nil {
+		fmt.Fprintf(w, "Error en la data")
+	}
+	storieCommentFind, exists := storie_comment.Get(s.DB)
+	if exists {
+		storieCommentUpdated, err := storieCommentFind.Update(s.DB)
+		if err != nil {
+			send_response.ERROR(w, http.StatusInternalServerError, err)
+		}
+		send_response.JSON(w, http.StatusOK, storieCommentUpdated)
+	}
+	type resp struct {
+		Msg string `json:"msg"`
+	}
+	response := resp{
+		Msg: "No existe Commentario",
+	}
+	send_response.JSON(w, http.StatusNotFound, response)
+}

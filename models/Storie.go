@@ -82,3 +82,23 @@ func (sc *StorieComment) Save(db *gorm.DB) (*StorieComment, error) {
 	}
 	return sc, nil
 }
+
+func (sc *StorieComment) Get(db *gorm.DB) (*StorieComment, bool) {
+	var find StorieComment
+	count := 0
+	db.Where(&sc).First(&find).Count(&count)
+	if count != 0 {
+		return &find, true
+	}
+	return &StorieComment{}, false
+}
+
+func (sc *StorieComment) Update(db *gorm.DB) (*StorieComment, error) {
+	var err error
+	var storieCommentUpdated StorieComment
+	err = db.Model(&storieCommentUpdated).Updates(&sc).Error
+	if err != nil {
+		return &StorieComment{}, err
+	}
+	return &storieCommentUpdated, nil
+}
