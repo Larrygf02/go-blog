@@ -25,7 +25,7 @@ func (s *Server) Initialize(DBDriver, DBUser, DBPassword, DBPort, DBHost, DBName
 	if err != nil {
 		log.Fatal("This is the error:", err)
 	}
-	s.DB.Debug().AutoMigrate(&models.User{}, &models.Storie{}, &models.StorieVisit{}, &models.StorieApplause{})
+	s.DB.Debug().AutoMigrate(&models.User{}, &models.Storie{}, &models.StorieVisit{}, &models.StorieApplause{}, &models.StorieComment{})
 	s.Router = mux.NewRouter()
 	s.InitializeRoutes()
 }
