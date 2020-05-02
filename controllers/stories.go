@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 
@@ -93,18 +94,29 @@ func (s *Server) SaveStorieComment(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) UpdateStorieComment(w http.ResponseWriter, r *http.Request) {
 	s.DB.LogMode(true)
-	var storie_comment models.StorieComment
 	parameters := mux.Vars(r)
 	id, err := strconv.Atoi(parameters["id"])
 	if err != nil {
 		send_response.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
-	var body models.StorieComment
-	json.NewDecoder(r.Body).Decode(&body)
+	// json.NewDecoder(r.Body).Decode(&body)
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		send_response.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	var storie_comment models.StorieComment
+	json.Unmarshal(body, &storie_comment)
+	storie_comment.ID = id
+	updated, err := storie_comment.Update(s.DB)
+	if err != nil {
+		send_response.ERROR(w, http.StatusInternalServerError, err)
+	}
+	/* var body models.StorieComment
 	fmt.Println(&body)
 	var test models.StorieComment
-	s.DB.Model(&test).Where("id = ?", id).Updates(models.StorieComment{Content: body.Content})
+	s.DB.Model(&test).Where("id = ?", id).Updates(models.StorieComment{Content: body.Content}) */
 	// test other method
-	send_response.JSON(w, http.StatusOK, storie_comment)
+	send_response.JSON(w, http.StatusOK, updated)
 }

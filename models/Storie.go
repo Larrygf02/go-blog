@@ -29,8 +29,8 @@ type StorieApplause struct {
 
 type StorieComment struct {
 	gorm.Model
-	ID       uint32 `gorm:"primary_key;auto_increment" json:"id"`
-	User     User   `gorm:"foreignkey:UserId;not null"`
+	ID       int  `gorm:"primary_key;auto_increment" json:"id"`
+	User     User `gorm:"foreignkey:UserId;not null"`
 	UserId   uint
 	Storie   Storie `gorm:"foreignkey:StorieId; not null"`
 	StorieId uint
@@ -96,10 +96,10 @@ func (sc *StorieComment) Get(db *gorm.DB) (*StorieComment, bool) {
 
 func (sc *StorieComment) Update(db *gorm.DB) (*StorieComment, error) {
 	var err error
-	var storieCommentUpdated StorieComment
-	err = db.Model(&storieCommentUpdated).Updates(&sc).Error
+	var updated StorieComment
+	err = db.Model(&updated).Where("id = ?", sc.ID).Updates(StorieComment{Content: sc.Content}).Error
 	if err != nil {
 		return &StorieComment{}, err
 	}
-	return &storieCommentUpdated, nil
+	return &updated, nil
 }
