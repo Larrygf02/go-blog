@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/larrygf02/go-blog/models"
 	send_response "github.com/larrygf02/go-blog/response"
 )
@@ -90,12 +92,22 @@ func (s *Server) SaveStorieComment(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) UpdateStorieComment(w http.ResponseWriter, r *http.Request) {
+	s.DB.LogMode(true)
 	var storie_comment models.StorieComment
-	err := json.NewDecoder(r.Body).Decode(&storie_comment)
+	parameters := mux.Vars(r)
+	id, err := strconv.Atoi(parameters["id"])
 	if err != nil {
-		fmt.Fprintf(w, "Error en la data")
+		send_response.ERROR(w, http.StatusInternalServerError, err)
+		return
 	}
-	storieCommentFind, exists := storie_comment.Get(s.DB)
+	var body models.StorieComment
+	var test models.StorieComment
+	json.NewDecoder(r.Body).Decode(&body)
+	s.DB.Model(&test).Where("id = ?", id).Updates(&body)
+	// test other method
+	send_response.JSON(w, http.StatusOK, storie_comment)
+
+	/* storieCommentFind, exists := storie_comment.Get(s.DB)
 	if exists {
 		storieCommentUpdated, err := storieCommentFind.Update(s.DB)
 		if err != nil {
@@ -109,5 +121,5 @@ func (s *Server) UpdateStorieComment(w http.ResponseWriter, r *http.Request) {
 	response := resp{
 		Msg: "No existe Commentario",
 	}
-	send_response.JSON(w, http.StatusNotFound, response)
+	send_response.JSON(w, http.StatusNotFound, response) */
 }
