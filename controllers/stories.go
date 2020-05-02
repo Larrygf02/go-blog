@@ -101,25 +101,10 @@ func (s *Server) UpdateStorieComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var body models.StorieComment
-	var test models.StorieComment
 	json.NewDecoder(r.Body).Decode(&body)
-	s.DB.Model(&test).Where("id = ?", id).Updates(&body)
+	fmt.Println(&body)
+	var test models.StorieComment
+	s.DB.Model(&test).Where("id = ?", id).Updates(models.StorieComment{Content: body.Content})
 	// test other method
 	send_response.JSON(w, http.StatusOK, storie_comment)
-
-	/* storieCommentFind, exists := storie_comment.Get(s.DB)
-	if exists {
-		storieCommentUpdated, err := storieCommentFind.Update(s.DB)
-		if err != nil {
-			send_response.ERROR(w, http.StatusInternalServerError, err)
-		}
-		send_response.JSON(w, http.StatusOK, storieCommentUpdated)
-	}
-	type resp struct {
-		Msg string `json:"msg"`
-	}
-	response := resp{
-		Msg: "No existe Commentario",
-	}
-	send_response.JSON(w, http.StatusNotFound, response) */
 }
