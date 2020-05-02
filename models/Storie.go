@@ -29,7 +29,8 @@ type StorieApplause struct {
 
 type StorieComment struct {
 	gorm.Model
-	User     User `gorm:"foreignkey:UserId;not null"`
+	ID       uint32 `gorm:"primary_key;auto_increment" json:"id"`
+	User     User   `gorm:"foreignkey:UserId;not null"`
 	UserId   uint
 	Storie   Storie `gorm:"foreignkey:StorieId; not null"`
 	StorieId uint
