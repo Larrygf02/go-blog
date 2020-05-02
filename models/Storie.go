@@ -94,12 +94,12 @@ func (sc *StorieComment) Get(db *gorm.DB) (*StorieComment, bool) {
 	return &StorieComment{}, false
 }
 
-func (sc *StorieComment) Update(db *gorm.DB) (*StorieComment, error) {
+func (sc *StorieComment) Update(db *gorm.DB) error {
 	var err error
 	var updated StorieComment
 	err = db.Model(&updated).Where("id = ?", sc.ID).Updates(StorieComment{Content: sc.Content}).Error
 	if err != nil {
-		return &StorieComment{}, err
+		return err
 	}
-	return &updated, nil
+	return nil
 }

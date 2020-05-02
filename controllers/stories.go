@@ -109,10 +109,11 @@ func (s *Server) UpdateStorieComment(w http.ResponseWriter, r *http.Request) {
 	var storie_comment models.StorieComment
 	json.Unmarshal(body, &storie_comment)
 	storie_comment.ID = id
-	updated, err := storie_comment.Update(s.DB)
+	err = storie_comment.Update(s.DB)
 	if err != nil {
 		send_response.ERROR(w, http.StatusInternalServerError, err)
 	}
+	updated, _ := storie_comment.Get(s.DB)
 	/* var body models.StorieComment
 	fmt.Println(&body)
 	var test models.StorieComment
