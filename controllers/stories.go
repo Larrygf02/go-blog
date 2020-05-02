@@ -100,7 +100,6 @@ func (s *Server) UpdateStorieComment(w http.ResponseWriter, r *http.Request) {
 		send_response.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
-	// json.NewDecoder(r.Body).Decode(&body)
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		send_response.ERROR(w, http.StatusUnprocessableEntity, err)
@@ -109,15 +108,9 @@ func (s *Server) UpdateStorieComment(w http.ResponseWriter, r *http.Request) {
 	var storie_comment models.StorieComment
 	json.Unmarshal(body, &storie_comment)
 	storie_comment.ID = id
-	err = storie_comment.Update(s.DB)
+	updated, err := storie_comment.Update(s.DB)
 	if err != nil {
 		send_response.ERROR(w, http.StatusInternalServerError, err)
 	}
-	updated, _ := storie_comment.Get(s.DB)
-	/* var body models.StorieComment
-	fmt.Println(&body)
-	var test models.StorieComment
-	s.DB.Model(&test).Where("id = ?", id).Updates(models.StorieComment{Content: body.Content}) */
-	// test other method
 	send_response.JSON(w, http.StatusOK, updated)
 }
