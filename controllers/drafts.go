@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -30,11 +29,7 @@ func (s *Server) NewDraft(w http.ResponseWriter, r *http.Request) {
 func (s *Server) UpdateDraft(w http.ResponseWriter, r *http.Request) {
 	s.DB.LogMode(true)
 	parameters := mux.Vars(r)
-	id, err := strconv.Atoi(parameters["id"])
-	if err != nil {
-		send_response.ERROR(w, http.StatusInternalServerError, err)
-		return
-	}
+	id, _ := strconv.Atoi(parameters["id"])
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		send_response.ERROR(w, http.StatusUnprocessableEntity, err)
@@ -54,17 +49,12 @@ func (s *Server) DraftByUser(w http.ResponseWriter, r *http.Request) {
 	s.DB.LogMode(true)
 	var user models.User
 	parameters := mux.Vars(r)
-	id, err := strconv.Atoi(parameters["user_id"])
-	fmt.Println(id)
-	if err != nil {
-		send_response.ERROR(w, http.StatusInternalServerError, err)
-		return
-	}
+	id, _ := strconv.Atoi(parameters["user_id"])
 	user.ID = id
 	// s.DB.First(&user, id)
 	userfind, exists := user.GetByID(s.DB)
 	if !exists {
-		send_response.ERROR(w, http.StatusNotFound, err)
+		send_response.ERROR(w, http.StatusNotFound, nil)
 		return
 	}
 	//err := json.NewDecoder(r.Body).Decode(&user)

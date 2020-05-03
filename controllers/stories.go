@@ -27,8 +27,16 @@ func (s *Server) NewStorie(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) StorieByUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
-	err := json.NewDecoder(r.Body).Decode(&user)
-	stories, err := user.GetStories(s.DB)
+	parameters := mux.Vars(r)
+	id, _ := strconv.Atoi(parameters["id"])
+	user.ID = id
+	userfind, exists := user.GetByID(s.DB)
+	if !exists {
+		send_response.ERROR(w, http.StatusNotFound, nil)
+		return
+	}
+	//err := json.NewDecoder(r.Body).Decode(&user)
+	stories, err := userfind.GetStories(s.DB)
 	if err != nil {
 		send_response.ERROR(w, http.StatusInternalServerError, err)
 	}

@@ -9,7 +9,7 @@ func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/user", s.NewUser).Methods("POST")
 	s.Router.HandleFunc("/login", s.Login).Methods("POST")
 	s.Router.HandleFunc("/storie", s.NewStorie).Methods("POST")
-	s.Router.HandleFunc("/storiebyuser", s.StorieByUser).Methods("POST")
+	s.Router.HandleFunc("/storie/user/{id}", s.StorieByUser).Methods("GET")
 	s.Router.HandleFunc("/storievisit", s.NewStorieVisit).Methods("POST")
 	s.Router.HandleFunc("/storievisit", s.GetAllStorieVisit).Methods("GET")
 	s.Router.HandleFunc("/storieapplause", s.SaveStorieApplause).Methods("POST")
