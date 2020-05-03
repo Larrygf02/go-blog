@@ -2,15 +2,17 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
+	"github.com/lib/pq"
 )
 
 type User struct {
 	gorm.Model
-	ID       int    `gorm:"primary_key;auto_increment"`
-	Nickname string `gorm:"type:varchar(70);unique;not null"`
-	Name     string `gorm:"type:varchar(50)"`
-	Email    string `gorm:"type:varchar(60);not null"`
-	Password string `gorm:"type: varchar(80); not null"`
+	ID        int           `gorm:"primary_key;auto_increment"`
+	Nickname  string        `gorm:"type:varchar(70);unique;not null"`
+	Name      string        `gorm:"type:varchar(50)"`
+	Email     string        `gorm:"type:varchar(60);not null"`
+	Password  string        `gorm:"type: varchar(80); not null"`
+	Favorites pq.Int64Array `gorm:"type:integer[]"`
 }
 
 func (u *User) SaveUser(db *gorm.DB) (*User, error) {
@@ -60,4 +62,15 @@ func (u *User) GetDrafts(db *gorm.DB) (*[]Draft, error) {
 		return &[]Draft{}, err
 	}
 	return &drafts, nil
+}
+
+/* Favorites */
+func (u *User) SaveFavorites(db *gorm.DB) (*User, error) {
+	var updated User
+	err := db.Model(&updated).Where("id = ?", u.ID).Updates(User{Favorites: []int64{1, 2, 3}}).Error
+	if err != nil {
+		return &User{}, err
+	}
+	db.First(&updated, u.ID)
+	return &updated, nil
 }
