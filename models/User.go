@@ -29,6 +29,7 @@ func (u *User) Login(db *gorm.DB) (*User, bool) {
 	return &User{}, false
 }
 
+/* Stories */
 func (u *User) GetStories(db *gorm.DB) (*[]Storie, error) {
 	var stories []Storie
 	var err error
@@ -37,4 +38,15 @@ func (u *User) GetStories(db *gorm.DB) (*[]Storie, error) {
 		return &[]Storie{}, err
 	}
 	return &stories, nil
+}
+
+/* Drafts */
+func (u *User) GetDrafts(db *gorm.DB) (*[]Draft, error) {
+	var drafts []Draft
+	var err error
+	err = db.Model(&u).Related(&drafts).Error
+	if err != nil {
+		return &[]Draft{}, err
+	}
+	return &drafts, nil
 }
