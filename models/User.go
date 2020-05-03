@@ -1,9 +1,12 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+)
 
 type User struct {
 	gorm.Model
+	ID       int    `gorm:"primary_key;auto_increment"`
 	Nickname string `gorm:"type:varchar(70);unique;not null"`
 	Name     string `gorm:"type:varchar(50)"`
 	Email    string `gorm:"type:varchar(60);not null"`
