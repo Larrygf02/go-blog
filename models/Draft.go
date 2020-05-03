@@ -12,7 +12,7 @@ type Draft struct {
 }
 
 /* DRAFTS */
-func (d *Draft) SaveDraft(db *gorm.DB) (*Draft, error) {
+func (d *Draft) Save(db *gorm.DB) (*Draft, error) {
 	var err error
 	err = db.Create(&d).Error
 	if err != nil {
@@ -41,3 +41,5 @@ func (d *Draft) GetByID(db *gorm.DB) (*Draft, error) {
 	}
 	return &found, nil
 }
+
+/* func (d *Draft) Filter(db *gorm.DB) */
