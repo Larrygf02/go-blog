@@ -2,6 +2,7 @@ package utils
 
 import "fmt"
 
+// Para que las funciones sean exportadas debe empezar con mayuscula
 func AppendInt(a []int64, b []int64) []int64 {
 	check := make(map[int64]int)
 	d := append(a, b...)
@@ -14,4 +15,28 @@ func AppendInt(a []int64, b []int64) []int64 {
 	}
 	fmt.Println(res)
 	return res
+}
+
+func GetIndex(a []int64, item int64) int {
+	for i, v := range a {
+		if v == item {
+			return i
+		}
+	}
+	return -1
+}
+
+func deleteItemsInt(a []int64, b []int64) []int64 {
+	for _, v := range b {
+		index := GetIndex(a, v)
+		if index != -1 {
+			fmt.Println(index)
+			a = Remove(a, index)
+		}
+	}
+	return a
+}
+
+func Remove(slice []int64, s int) []int64 {
+	return append(slice[:s], slice[s+1:]...)
 }
