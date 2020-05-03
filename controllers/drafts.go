@@ -48,3 +48,13 @@ func (s *Server) UpdateDraft(w http.ResponseWriter, r *http.Request) {
 	}
 	send_response.JSON(w, http.StatusOK, updated)
 }
+
+func (s *Server) DraftByUser(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	drafts, err := user.GetDrafts(s.DB)
+	if err != nil {
+		send_response.ERROR(w, http.StatusInternalServerError, err)
+	}
+	send_response.JSON(w, http.StatusOK, drafts)
+}
