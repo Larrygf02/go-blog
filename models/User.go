@@ -32,6 +32,14 @@ func (u *User) Login(db *gorm.DB) (*User, bool) {
 	return &User{}, false
 }
 
+func (u *User) GetByID(db *gorm.DB) (*User, bool) {
+	err := db.First(&u, u.ID).Error
+	if err != nil {
+		return &User{}, false
+	}
+	return u, true
+}
+
 /* Stories */
 func (u *User) GetStories(db *gorm.DB) (*[]Storie, error) {
 	var stories []Storie

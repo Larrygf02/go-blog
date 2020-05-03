@@ -60,11 +60,18 @@ func (s *Server) DraftByUser(w http.ResponseWriter, r *http.Request) {
 		send_response.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
-	s.DB.First(&user, id)
+	user.ID = id
+	// s.DB.First(&user, id)
+	userfind, exists := user.GetByID(s.DB)
+	if !exists {
+		send_response.ERROR(w, http.StatusNotFound, err)
+		return
+	}
 	//err := json.NewDecoder(r.Body).Decode(&user)
-	drafts, err := user.GetDrafts(s.DB)
+	drafts, err := userfind.GetDrafts(s.DB)
 	if err != nil {
 		send_response.ERROR(w, http.StatusInternalServerError, err)
+		return
 	}
 	send_response.JSON(w, http.StatusOK, drafts)
 }
