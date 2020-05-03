@@ -24,7 +24,7 @@ func (d *Draft) Save(db *gorm.DB) (*Draft, error) {
 func (d *Draft) Update(db *gorm.DB) (*Draft, error) {
 	var err error
 	var updated Draft
-	err = db.Model(&updated).Where("id = ?", d.ID).Updates(Draft{Content: d.Content}).Error
+	err = db.Model(&updated).Where("id = ?", d.ID).Updates(Draft{Content: d.Content, Title: d.Title}).Error
 	if err != nil {
 		return &Draft{}, err
 	}
