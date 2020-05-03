@@ -67,7 +67,7 @@ func (u *User) GetDrafts(db *gorm.DB) (*[]Draft, error) {
 /* Favorites */
 func (u *User) SaveFavorites(db *gorm.DB, data interface{}) (*User, error) {
 	var updated User
-	err := db.Model(&updated).Where("id = ?", u.ID).Updates(User{Favorites: []int64{1, 2, 3}}).Error
+	err := db.Model(&updated).Where("id = ?", u.ID).Updates(User{Favorites: u.Favorites}).Error
 	if err != nil {
 		return &User{}, err
 	}

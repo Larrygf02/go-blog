@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/larrygf02/go-blog/models"
 	send_response "github.com/larrygf02/go-blog/response"
+	"github.com/larrygf02/go-blog/utils"
 )
 
 type Body struct {
@@ -25,11 +25,11 @@ func (s *Server) StoriesFavorites(w http.ResponseWriter, r *http.Request) {
 	user.ID = body.ID
 	// agregar
 	user_found, _ := user.GetByID(s.DB)
-	fmt.Println(user_found.Favorites)
-	fmt.Println(body.StoriesID)
-	//updated, err := user.SaveFavorites(s.DB, body)
+	favorites := utils.AppendInt(user_found.Favorites, body.StoriesID)
+	user.Favorites = favorites
+	updated, err := user.SaveFavorites(s.DB, body)
 	if err != nil {
 		send_response.ERROR(w, http.StatusInternalServerError, err)
 	}
-	send_response.JSON(w, http.StatusOK, user_found)
+	send_response.JSON(w, http.StatusOK, updated)
 }
