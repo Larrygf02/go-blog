@@ -15,6 +15,7 @@ func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/storieapplause", s.SaveStorieApplause).Methods("POST")
 	s.Router.HandleFunc("/storiecomment", s.SaveStorieComment).Methods("POST")
 	s.Router.HandleFunc("/storiecomment/{id}", s.UpdateStorieComment).Methods("PUT")
+	s.Router.HandleFunc("/draft", s.NewDraft).Methods("POST")
 	// Habilitar CORS
 	s.Router.Use(mux.CORSMethodMiddleware(s.Router))
 	s.Router.Use(middlewares.SetMiddlewareJSON)
