@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/larrygf02/go-blog/models"
@@ -12,6 +13,7 @@ import (
 type Body struct {
 	ID        int     `json:"id"`
 	StoriesID []int64 `json:"stories_id"`
+	Type      string  `json:"type"`
 }
 
 func (s *Server) StoriesFavorites(w http.ResponseWriter, r *http.Request) {
@@ -23,9 +25,19 @@ func (s *Server) StoriesFavorites(w http.ResponseWriter, r *http.Request) {
 	}
 	var user models.User
 	user.ID = body.ID
-	// agregar
 	user_found, _ := user.GetByID(s.DB)
-	favorites := utils.AppendInt(user_found.Favorites, body.StoriesID)
+	var favorites []int64
+	switch body.Type {
+	case "delete":
+		fmt.Println("Delete item")
+		favorites = utils.DeleteItemsInt(user_found.Favorites, body.StoriesID)
+	case "add":
+		fmt.Println("Add Item")
+		favorites = utils.AppendInt(user_found.Favorites, body.StoriesID)
+	default:
+		send_response.ERROR(w, http.StatusInternalServerError, nil)
+		return
+	}
 	user.Favorites = favorites
 	updated, err := user.SaveFavorites(s.DB, body)
 	if err != nil {

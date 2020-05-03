@@ -26,7 +26,7 @@ func GetIndex(a []int64, item int64) int {
 	return -1
 }
 
-func deleteItemsInt(a []int64, b []int64) []int64 {
+func DeleteItemsInt(a []int64, b []int64) []int64 {
 	for _, v := range b {
 		index := GetIndex(a, v)
 		if index != -1 {
