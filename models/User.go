@@ -13,6 +13,7 @@ type User struct {
 	Email     string        `gorm:"type:varchar(60);not null"`
 	Password  string        `gorm:"type: varchar(80); not null"`
 	Favorites pq.Int64Array `gorm:"type:integer[]"`
+	Archiveds pq.Int64Array `gorm:"type:integer[]"`
 }
 
 func (u *User) SaveUser(db *gorm.DB) (*User, error) {
@@ -79,6 +80,27 @@ func (u *User) GetFavorites(db *gorm.DB) ([]Storie, error) {
 	var stories []Storie
 	favorites := []int64(u.Favorites)
 	err := db.Where(favorites).Find(&stories).Error
+	if err != nil {
+		return []Storie{}, err
+	}
+	return stories, nil
+}
+
+/* Archiveds */
+func (u *User) SaveArchiveds(db *gorm.DB, data interface{}) (*User, error) {
+	var updated User
+	err := db.Model(&updated).Where("id = ?", u.ID).Updates(User{Archiveds: u.Archiveds}).Error
+	if err != nil {
+		return &User{}, err
+	}
+	db.First(&updated, u.ID)
+	return &updated, nil
+}
+
+func (u *User) GetArchiveds(db *gorm.DB) ([]Storie, error) {
+	var stories []Storie
+	Archiveds := []int64(u.Archiveds)
+	err := db.Where(Archiveds).Find(&stories).Error
 	if err != nil {
 		return []Storie{}, err
 	}
