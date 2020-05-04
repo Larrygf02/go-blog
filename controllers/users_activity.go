@@ -68,7 +68,7 @@ func (s *Server) GetStoriesFavorites(w http.ResponseWriter, r *http.Request) {
 	send_response.JSON(w, http.StatusOK, stories)
 }
 
-func (s *Server) StorieseArchiveds(w http.ResponseWriter, r *http.Request) {
+func (s *Server) StoriesArchiveds(w http.ResponseWriter, r *http.Request) {
 	s.DB.LogMode(true)
 	var body Body
 	err := json.NewDecoder(r.Body).Decode(&body)
