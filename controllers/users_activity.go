@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/larrygf02/go-blog/models"
 	send_response "github.com/larrygf02/go-blog/response"
 	"github.com/larrygf02/go-blog/utils"
@@ -44,4 +46,25 @@ func (s *Server) StoriesFavorites(w http.ResponseWriter, r *http.Request) {
 		send_response.ERROR(w, http.StatusInternalServerError, err)
 	}
 	send_response.JSON(w, http.StatusOK, updated)
+}
+
+func (s *Server) GetStoriesFavorites(w http.ResponseWriter, r *http.Request) {
+	s.DB.LogMode(true)
+	var user models.User
+	parameters := mux.Vars(r)
+	id, _ := strconv.Atoi(parameters["id"])
+	user.ID = id
+	userFound, exists := user.GetByID(s.DB)
+	if !exists {
+		send_response.ERROR(w, http.StatusNotFound, nil)
+		return
+	}
+	var stories []models.Storie
+	stories, err := userFound.GetFavorites(s.DB)
+	if err != nil {
+		send_response.ERROR(w, http.StatusNotFound, nil)
+		return
+	}
+	send_response.JSON(w, http.StatusOK, stories)
+
 }

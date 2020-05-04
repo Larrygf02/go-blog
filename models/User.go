@@ -74,3 +74,12 @@ func (u *User) SaveFavorites(db *gorm.DB, data interface{}) (*User, error) {
 	db.First(&updated, u.ID)
 	return &updated, nil
 }
+
+func (u *User) GetFavorites(db *gorm.DB) ([]Storie, error) {
+	var stories []Storie
+	err := db.Where(u.Favorites).Find(&stories).Error
+	if err != nil {
+		return []Storie{}, err
+	}
+	return stories, nil
+}
