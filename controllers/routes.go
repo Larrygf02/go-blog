@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/gorilla/mux"
+	"github.com/gorilla/handlers"
 	"github.com/larrygf02/go-blog/middlewares"
 )
 
@@ -23,6 +23,12 @@ func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/user/storie/archiveds", s.StoriesArchiveds).Methods("POST")
 	s.Router.HandleFunc("/user/storie/archiveds/{id}", s.GetStoriesArchiveds).Methods("GET")
 	// Habilitar CORS
-	s.Router.Use(mux.CORSMethodMiddleware(s.Router))
+	// s.Router.Use(mux.CORSMethodMiddleware(s.Router))
+	cors := handlers.CORS(
+		handlers.AllowedHeaders([]string{"content-type"}),
+		handlers.AllowedOrigins([]string{"*"}),
+		handlers.AllowCredentials(),
+	)
+	s.Router.Use(cors)
 	s.Router.Use(middlewares.SetMiddlewareJSON)
 }
