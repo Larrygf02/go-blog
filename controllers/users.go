@@ -23,6 +23,7 @@ func (s *Server) NewUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
+	s.DB.LogMode(true)
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {

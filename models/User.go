@@ -27,12 +27,13 @@ func (u *User) SaveUser(db *gorm.DB) (*User, error) {
 
 func (u *User) Login(db *gorm.DB) (*User, bool) {
 	var userFind User
-	count := 0
-	db.Where(&u).First(&userFind).Count(&count)
-	if count != 0 {
-		return &userFind, true
+	//count := 0
+	err := db.Where(&User{Nickname: u.Nickname, Password: u.Password}).First(&userFind).Error
+	//fmt.Println(count)
+	if err != nil {
+		return &User{}, false
 	}
-	return &User{}, false
+	return &userFind, true
 }
 
 func (u *User) GetByID(db *gorm.DB) (*User, bool) {
