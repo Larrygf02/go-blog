@@ -7,13 +7,13 @@ import (
 
 type User struct {
 	gorm.Model
-	ID        int           `gorm:"primary_key;auto_increment"`
-	Nickname  string        `gorm:"type:varchar(70);unique;not null"`
-	Name      string        `gorm:"type:varchar(50)"`
-	Email     string        `gorm:"type:varchar(60);not null"`
-	Password  string        `gorm:"type: varchar(80); not null"`
-	Favorites pq.Int64Array `gorm:"type:integer[]"`
-	Archiveds pq.Int64Array `gorm:"type:integer[]"`
+	ID        int           `gorm:"primary_key;auto_increment" json:"id"`
+	Nickname  string        `gorm:"type:varchar(70);unique;not null" json:"nickname"`
+	Name      string        `gorm:"type:varchar(50)" json:"name"`
+	Email     string        `gorm:"type:varchar(60);not null" json:"email"`
+	Password  string        `gorm:"type: varchar(80); not null" json:"password"`
+	Favorites pq.Int64Array `gorm:"type:integer[]" json:"favorites"`
+	Archiveds pq.Int64Array `gorm:"type:integer[]" json:"archiveds"`
 }
 
 func (u *User) SaveUser(db *gorm.DB) (*User, error) {
