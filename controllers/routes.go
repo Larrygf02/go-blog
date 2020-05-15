@@ -2,12 +2,13 @@ package controllers
 
 import (
 	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 	"github.com/larrygf02/go-blog/middlewares"
 )
 
 func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/user", s.NewUser).Methods("POST")
-	s.Router.HandleFunc("/login", s.Login).Methods("POST")
+	s.Router.HandleFunc("/login", s.Login).Methods("POST", "OPTIONS")
 	s.Router.HandleFunc("/storie", s.NewStorie).Methods("POST")
 	s.Router.HandleFunc("/storie/user/{id}", s.StorieByUser).Methods("GET")
 	s.Router.HandleFunc("/storievisit", s.NewStorieVisit).Methods("POST")
@@ -23,10 +24,11 @@ func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/user/storie/archiveds", s.StoriesArchiveds).Methods("POST")
 	s.Router.HandleFunc("/user/storie/archiveds/{id}", s.GetStoriesArchiveds).Methods("GET")
 	// Habilitar CORS
-	// s.Router.Use(mux.CORSMethodMiddleware(s.Router))
+	s.Router.Use(mux.CORSMethodMiddleware(s.Router))
 	cors := handlers.CORS(
 		handlers.AllowedHeaders([]string{"content-type"}),
 		handlers.AllowedOrigins([]string{"*"}),
+		handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"}),
 		handlers.AllowCredentials(),
 	)
 	s.Router.Use(cors)

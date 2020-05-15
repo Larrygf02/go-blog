@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -32,5 +33,9 @@ func (s *Server) Initialize(DBDriver, DBUser, DBPassword, DBPort, DBHost, DBName
 }
 
 func (s *Server) Run(port string) {
-	log.Fatal(http.ListenAndServe(port, s.Router))
+	// Where ORIGIN_ALLOWED is like `scheme://dns[:port]`, or `*` (insecure)
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+	originsOk := handlers.AllowedOrigins([]string{"*"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+	log.Fatal(http.ListenAndServe(port, handlers.CORS(originsOk, headersOk, methodsOk)(s.Router)))
 }
