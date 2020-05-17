@@ -16,11 +16,24 @@ func (s *Server) NewUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Fprintf(w, "Inserte un Usuario valido")
 	}
-	userCreated, err := user.SaveUser(s.DB)
-	if err != nil {
-		send_response.ERROR(w, http.StatusInternalServerError, err)
+	fmt.Println(user)
+	type resp struct {
+		IsValid bool `json:"is_valid"`
 	}
-	send_response.JSON(w, http.StatusCreated, userCreated)
+	if user.Nickname == "" {
+		response := resp{
+			IsValid: false,
+		}
+		send_response.JSON(w, http.StatusBadRequest, response)
+		return
+	}
+	/*userCreated, err := user.SaveUser(s.DB)
+	 if err != nil {
+		send_response.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+	send_response.JSON(w, http.StatusCreated, userCreated) */
+	send_response.JSON(w, http.StatusCreated, user)
 }
 
 func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
