@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -17,23 +18,35 @@ func (s *Server) NewUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Inserte un Usuario valido")
 	}
 	fmt.Println(user)
-	type resp struct {
-		IsValid bool `json:"is_valid"`
-	}
+	// Validate User
 	if user.Nickname == "" {
-		response := resp{
-			IsValid: false,
-		}
-		send_response.JSON(w, http.StatusBadRequest, response)
+		err := errors.New("Nickname is required")
+		send_response.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
-	/*userCreated, err := user.SaveUser(s.DB)
-	 if err != nil {
+	if user.Name == "" {
+		err := errors.New("Name is required")
+		send_response.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+
+	if user.Email == "" {
+		err := errors.New("Email is required")
+		send_response.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+
+	if user.Password == "" {
+		err := errors.New("Password is required")
+		send_response.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+	userCreated, err := user.SaveUser(s.DB)
+	if err != nil {
 		send_response.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
-	send_response.JSON(w, http.StatusCreated, userCreated) */
-	send_response.JSON(w, http.StatusCreated, user)
+	send_response.JSON(w, http.StatusCreated, userCreated)
 }
 
 func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
