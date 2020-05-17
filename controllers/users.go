@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/larrygf02/go-blog/models"
 	send_response "github.com/larrygf02/go-blog/response"
 )
@@ -44,6 +46,30 @@ func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
 	response := resp{
 		IsLogin: isLogin,
 		User:    *userFind,
+	}
+	send_response.JSON(w, http.StatusOK, response)
+}
+
+func (s *Server) UserNameValid(w http.ResponseWriter, r *http.Request) {
+	s.DB.LogMode(true)
+	var user models.User
+	parameters := mux.Vars(r)
+	nickname, _ := strconv.Atoi(parameters["nickname"])
+	//user.Nickname = username
+	err := s.DB.Where("nickname = ?", nickname).First(&user).Error
+	type resp struct {
+		IsValid bool `json:"is_valid"`
+	}
+	response := resp{}
+	// No existe
+	if err != nil {
+		response = resp{
+			IsValid: true,
+		}
+	}
+	// Ya existe
+	response = resp{
+		IsValid: false,
 	}
 	send_response.JSON(w, http.StatusOK, response)
 }
