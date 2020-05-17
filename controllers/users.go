@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/larrygf02/go-blog/models"
@@ -54,9 +53,10 @@ func (s *Server) UserNameValid(w http.ResponseWriter, r *http.Request) {
 	s.DB.LogMode(true)
 	var user models.User
 	parameters := mux.Vars(r)
-	nickname, _ := strconv.Atoi(parameters["nickname"])
+	fmt.Println(parameters)
+	//nickname, _ := strconv.Atoi(parameters["nickname"])
 	//user.Nickname = username
-	err := s.DB.Where("nickname = ?", nickname).First(&user).Error
+	err := s.DB.Where("nickname = ?", parameters["nickname"]).First(&user).Error
 	type resp struct {
 		IsValid bool `json:"is_valid"`
 	}
@@ -66,6 +66,8 @@ func (s *Server) UserNameValid(w http.ResponseWriter, r *http.Request) {
 		response = resp{
 			IsValid: true,
 		}
+		send_response.JSON(w, http.StatusOK, response)
+		return
 	}
 	// Ya existe
 	response = resp{

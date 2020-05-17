@@ -23,6 +23,7 @@ func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/user/storie/favorites/{id}", s.GetStoriesFavorites).Methods("GET")
 	s.Router.HandleFunc("/user/storie/archiveds", s.StoriesArchiveds).Methods("POST")
 	s.Router.HandleFunc("/user/storie/archiveds/{id}", s.GetStoriesArchiveds).Methods("GET")
+	s.Router.HandleFunc("/user/valid/{nickname}", s.UserNameValid).Methods("GET")
 	// Habilitar CORS
 	s.Router.Use(mux.CORSMethodMiddleware(s.Router))
 	cors := handlers.CORS(
