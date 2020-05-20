@@ -9,6 +9,7 @@ import (
 func (s *Server) InitializeRoutes() {
 	s.Router.HandleFunc("/user", s.NewUser).Methods("POST")
 	s.Router.HandleFunc("/login", s.Login).Methods("POST", "OPTIONS")
+	s.Router.HandleFunc("/stories", s.AllStories).Methods("GET")
 	s.Router.HandleFunc("/storie", s.NewStorie).Methods("POST")
 	s.Router.HandleFunc("/storie/user/{id}", s.StorieByUser).Methods("GET")
 	s.Router.HandleFunc("/storievisit", s.NewStorieVisit).Methods("POST")

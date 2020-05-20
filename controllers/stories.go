@@ -43,6 +43,13 @@ func (s *Server) StorieByUser(w http.ResponseWriter, r *http.Request) {
 	send_response.JSON(w, http.StatusOK, stories)
 }
 
+func (s *Server) AllStories(w http.ResponseWriter, r *http.Request) {
+	s.DB.LogMode(true)
+	var stories []models.Storie
+	s.DB.Find(&stories)
+	send_response.JSON(w, http.StatusOK, stories)
+}
+
 /* STORIEVISIT*/
 func (s *Server) NewStorieVisit(w http.ResponseWriter, r *http.Request) {
 	var storie_visit models.StorieVisit
