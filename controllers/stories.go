@@ -21,6 +21,7 @@ func (s *Server) NewStorie(w http.ResponseWriter, r *http.Request) {
 	storieCreated, err := storie.SaveStorie(s.DB)
 	if err != nil {
 		send_response.ERROR(w, http.StatusInternalServerError, err)
+		return
 	}
 	send_response.JSON(w, http.StatusCreated, storieCreated)
 }
