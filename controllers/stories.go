@@ -44,6 +44,20 @@ func (s *Server) StorieByUser(w http.ResponseWriter, r *http.Request) {
 	send_response.JSON(w, http.StatusOK, stories)
 }
 
+func (s *Server) GetStorie(w http.ResponseWriter, r *http.Request) {
+	s.DB.LogMode(true)
+	var storie models.Storie
+	parameters := mux.Vars(r)
+	id, _ := strconv.Atoi(parameters["id"])
+	storie.ID = id
+	storieFind, exists := storie.GetByID(s.DB)
+	if !exists {
+		send_response.ERROR(w, http.StatusNotFound, nil)
+		return
+	}
+	send_response.JSON(w, http.StatusOK, storieFind)
+
+}
 func (s *Server) AllStories(w http.ResponseWriter, r *http.Request) {
 	s.DB.LogMode(true)
 	var stories []models.Storie

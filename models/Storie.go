@@ -4,6 +4,7 @@ import "github.com/jinzhu/gorm"
 
 type Storie struct {
 	gorm.Model
+	ID      int    `gorm:"primary_key;auto_increment" json:"id"`
 	Title   string `gorm:"type:varchar(100);not null"`
 	Content string
 	User    User `gorm:"foreignkey:UserId"`
