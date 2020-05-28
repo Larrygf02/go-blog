@@ -48,6 +48,14 @@ func (s *Storie) SaveStorie(db *gorm.DB) (*Storie, error) {
 	return s, nil
 }
 
+func (s *Storie) GetByID(db *gorm.DB) (*Storie, bool) {
+	err := db.First(&s, s.ID).Error
+	if err != nil {
+		return &Storie{}, false
+	}
+	return s, true
+}
+
 /* Storie Visit*/
 func (sv *StorieVisit) SaveStorieVisit(db *gorm.DB) (*StorieVisit, error) {
 	var err error
