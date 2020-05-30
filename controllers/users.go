@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/larrygf02/go-blog/models"
 	send_response "github.com/larrygf02/go-blog/response"
+	"github.com/larrygf02/go-blog/utils"
 )
 
 func (s *Server) NewUser(w http.ResponseWriter, r *http.Request) {
@@ -59,15 +60,31 @@ func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
 
 	userFind, isLogin := user.Login(s.DB)
 	fmt.Println(isLogin)
-	if isLogin {
-		// Return JWT
-	}
+	//var jwtResponse models.JWTResponse
 	// Las propiedas de las structuras deben estar en mayusculas
 	// debe tener las dobles comillas en el json
 	type resp struct {
 		IsLogin bool        `json:"is_login"`
 		User    models.User `json:"user"`
+		Token   string      `json:"token"`
 	}
+	if isLogin {
+		token, err := utils.CreateToken()
+		if err != nil {
+			send_response.ERROR(w, http.StatusBadRequest, err)
+			return
+		}
+		response := resp{
+			IsLogin: isLogin,
+			User:    *userFind,
+			Token:   token,
+		}
+		send_response.JSON(w, http.StatusOK, response)
+		return
+		// Return JWT
+		//json.NewEncoder(w).Encode(&jwtResponse)
+	}
+
 	response := resp{
 		IsLogin: isLogin,
 		User:    *userFind,
