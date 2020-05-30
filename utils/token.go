@@ -24,3 +24,7 @@ func CreateToken() (string, error) {
 	}
 	return ss, nil
 }
+
+func ValidateToken(token string) (bool, error) {
+	return false, nil
+}
