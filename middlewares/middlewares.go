@@ -21,14 +21,16 @@ func TokenMiddlewareJSON(next http.Handler) http.Handler {
 		path := r.URL.Path
 		if path != "/login" {
 			bearerToken := r.Header.Get("Authorization")
+			log.Println(bearerToken)
 			isValid, _ := utils.ValidateToken(bearerToken)
 			if isValid {
 				m := r.Method
 				log.Println(m)
 				log.Println(r.RemoteAddr)
 				next.ServeHTTP(w, r)
+			} else {
+				http.Error(w, "Invalid token", http.StatusUnauthorized)
 			}
-			http.Error(w, "Invalid token", http.StatusUnauthorized)
 		} else {
 			next.ServeHTTP(w, r)
 		}
