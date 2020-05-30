@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -19,7 +20,7 @@ var signKey = []byte("SECRET")
 func CreateToken() (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"foo": "bar",
-		"exp": time.Now().AddDate(0, 0, 7).Unix(),
+		"exp": time.Now().Add(time.Minute * 3).Unix(),
 	})
 	ss, err := token.SignedString(signKey)
 	if err != nil {
@@ -29,17 +30,22 @@ func CreateToken() (string, error) {
 }
 
 func ValidateToken(token string) (bool, error) {
-	tokenString := strings.Split(token, "Bearer ")[1]
-	_token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+	tokenSplit := strings.Split(token, "Bearer ")
+	if len(tokenSplit) > 1 {
+		tokenString := tokenSplit[1]
+		_token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			}
+			// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
+			return signKey, nil
+		})
+		if err != nil {
+			log.Println(err)
+			return false, err
 		}
-		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
-		return signKey, nil
-	})
-	if err != nil {
-		log.Println(err)
-		return false, nil
+		return _token.Valid, nil
+	} else {
+		return false, errors.New("No token")
 	}
-	return _token.Valid, nil
 }
