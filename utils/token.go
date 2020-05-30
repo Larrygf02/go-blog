@@ -40,11 +40,23 @@ func ValidateToken(token string) (bool, error) {
 			// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
 			return signKey, nil
 		})
-		if err != nil {
-			log.Println(err)
-			return false, err
+		if _token.Valid {
+			return true, nil
+		} else if ve, ok := err.(*jwt.ValidationError); ok {
+			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
+				_error := errors.New("Token malformed")
+				return false, _error
+			} else if ve.Errors&(jwt.ValidationErrorExpired) != 0 {
+				log.Println("ERROR TOKEN EXPIRED")
+				_error := errors.New("Token has expired")
+				return false, _error
+			} else {
+				_error := errors.New("Could not handle this token")
+				return false, _error
+			}
+		} else {
+			return false, errors.New("Opp Error")
 		}
-		return _token.Valid, nil
 	} else {
 		return false, errors.New("No token")
 	}
