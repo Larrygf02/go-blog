@@ -59,6 +59,9 @@ func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
 
 	userFind, isLogin := user.Login(s.DB)
 	fmt.Println(isLogin)
+	if isLogin {
+		// Return JWT
+	}
 	// Las propiedas de las structuras deben estar en mayusculas
 	// debe tener las dobles comillas en el json
 	type resp struct {
