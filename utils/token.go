@@ -29,21 +29,29 @@ func CreateToken() (string, error) {
 }
 
 func ValidateToken(token string) (bool, error) {
-	tokenString := strings.Replace(token, "Bearer", "", 1)
-	log.Println(tokenString)
-	t, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	tokenString := strings.Split(token, "Bearer ")[1]
+	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		log.Println("Entro aqui")
+		if err, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			log.Println(err)
+			log.Println("Upp error")
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
+		log.Println("Paso")
 		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
 		return signKey, nil
 	})
-	if claims, ok := t.Claims.(jwt.MapClaims); ok && t.Valid {
+	if err != nil {
+		log.Println(err)
+		return false, nil
+	}
+	/* if claims, ok := t.Claims.(jwt.MapClaims); ok && t.Valid {
 		fmt.Println(claims["foo"])
 		return true, nil
 	} else {
 		fmt.Println(err)
 		return false, err
-	}
+	} */
+	return true, nil
 }
