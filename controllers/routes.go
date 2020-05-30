@@ -36,4 +36,5 @@ func (s *Server) InitializeRoutes() {
 	)
 	s.Router.Use(cors)
 	s.Router.Use(middlewares.SetMiddlewareJSON)
+	s.Router.Use(middlewares.TokenMiddlewareJSON)
 }

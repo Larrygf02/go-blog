@@ -19,5 +19,6 @@ func TokenMiddlewareJSON(next http.Handler) http.Handler {
 		m := r.Method
 		log.Println(m)
 		log.Println(r.RemoteAddr)
+		next.ServeHTTP(w, r)
 	})
 }
