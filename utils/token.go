@@ -20,7 +20,7 @@ var signKey = []byte("SECRET")
 func CreateToken() (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"foo": "bar",
-		"exp": time.Now().Add(time.Minute * 3).Unix(),
+		"exp": time.Now().Add(time.Minute * 30).Unix(),
 	})
 	ss, err := token.SignedString(signKey)
 	if err != nil {
