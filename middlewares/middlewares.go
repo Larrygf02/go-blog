@@ -22,11 +22,15 @@ func TokenMiddlewareJSON(next http.Handler) http.Handler {
 		if path != "/login" {
 			bearerToken := r.Header.Get("Authorization")
 			log.Println(bearerToken)
-			isValid, _ := utils.ValidateToken(bearerToken)
+			isValid, err := utils.ValidateToken(bearerToken)
 			if isValid {
 				next.ServeHTTP(w, r)
 			} else {
-				http.Error(w, "Invalid token", http.StatusUnauthorized)
+				if err.Error() == "Token has expired" {
+					http.Error(w, err.Error(), 402)
+				} else {
+					http.Error(w, err.Error(), http.StatusUnauthorized)
+				}
 			}
 		} else {
 			next.ServeHTTP(w, r)
