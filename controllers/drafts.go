@@ -37,7 +37,7 @@ func (s *Server) UpdateDraft(w http.ResponseWriter, r *http.Request) {
 	}
 	var draft models.Draft
 	json.Unmarshal(body, &draft)
-	draft.ID = id
+	draft.ID = uint64(id)
 	updated, err := draft.Update(s.DB)
 	if err != nil {
 		send_response.ERROR(w, http.StatusInternalServerError, err)

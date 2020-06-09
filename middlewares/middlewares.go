@@ -1,8 +1,10 @@
 package middlewares
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/larrygf02/go-blog/utils"
 )
@@ -19,7 +21,8 @@ func SetMiddlewareJSON(next http.Handler) http.Handler {
 func TokenMiddlewareJSON(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path
-		if path != "/login" {
+		fmt.Println(path)
+		if path != "/login" && path != "/user" && !strings.HasPrefix(path, "/user/valid") {
 			bearerToken := r.Header.Get("Authorization")
 			log.Println(bearerToken)
 			isValid, err := utils.ValidateToken(bearerToken)
